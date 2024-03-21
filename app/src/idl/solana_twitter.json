@@ -1,0 +1,115 @@
+{
+  "version": "0.1.0",
+  "name": "solana_twitter",
+  "instructions": [
+    {
+      "name": "initialize",
+      "accounts": [
+        { "name": "state", "isMut": true, "isSigner": true },
+        { "name": "user", "isMut": true, "isSigner": true },
+        { "name": "systemProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": []
+    },
+    {
+      "name": "tweet",
+      "accounts": [
+        { "name": "tweet", "isMut": true, "isSigner": true },
+        { "name": "author", "isMut": true, "isSigner": true },
+        { "name": "state", "isMut": true, "isSigner": false },
+        { "name": "systemProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "topic", "type": "string" },
+        { "name": "content", "type": "string" }
+      ]
+    },
+    {
+      "name": "deleteTweet",
+      "accounts": [
+        { "name": "tweet", "isMut": true, "isSigner": false },
+        { "name": "author", "isMut": false, "isSigner": true }
+      ],
+      "args": []
+    },
+    {
+      "name": "likeTweet",
+      "accounts": [
+        { "name": "tweet", "isMut": true, "isSigner": false },
+        { "name": "user", "isMut": true, "isSigner": true },
+        { "name": "author", "isMut": true, "isSigner": false },
+        { "name": "systemProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": []
+    },
+    {
+      "name": "updateProfile",
+      "accounts": [{ "name": "userAccount", "isMut": true, "isSigner": false }],
+      "args": [
+        { "name": "username", "type": { "option": "string" } },
+        { "name": "bio", "type": { "option": "string" } }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "PlatformState",
+      "type": {
+        "kind": "struct",
+        "fields": [{ "name": "tweetCount", "type": "u64" }]
+      }
+    },
+    {
+      "name": "TweetAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "id", "type": "u64" },
+          { "name": "author", "type": "publicKey" },
+          { "name": "timestamp", "type": "i64" },
+          { "name": "topic", "type": "string" },
+          { "name": "content", "type": "string" },
+          { "name": "likes", "type": "u64" }
+        ]
+      }
+    },
+    {
+      "name": "UserAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "username", "type": "string" },
+          { "name": "bio", "type": "string" }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "TopicTooLong",
+      "msg": "The provided topic should be a maximum of 50 characters."
+    },
+    {
+      "code": 6001,
+      "name": "ContentTooLong",
+      "msg": "The provided content should be a maximum of 280 characters."
+    },
+    {
+      "code": 6002,
+      "name": "UsernameTooLong",
+      "msg": "The provided username should be a maximum of 40 characters."
+    },
+    {
+      "code": 6003,
+      "name": "BioTooLong",
+      "msg": "The provided bio should be a maximum of 280 characters."
+    },
+    {
+      "code": 6004,
+      "name": "CannotLikeOwnTweet",
+      "msg": "You cannot like your own tweet."
+    },
+    { "code": 6005, "name": "Unauthorized", "msg": "Unauthorized action." }
+  ]
+}
